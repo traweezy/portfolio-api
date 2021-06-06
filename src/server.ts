@@ -14,7 +14,7 @@ import IndexCtrl from './controllers/pages/index-controller';
 @Configuration({
   ...config,
   acceptMimes: ['application/json'],
-  httpPort: process.env.HTTP_PORT || 8083,
+  httpPort: process.env.PORT || process.env.HTTP_PORT,
   httpsPort: process.env.HTTPS_PORT,
   mount: {
     '/rest': [`${rootDir}/controllers/**/*.ts`],
