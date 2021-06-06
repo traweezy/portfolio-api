@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { Controller, Post, BodyParams, UseBefore } from '@tsed/common';
+import { Controller, Post, BodyParams } from '@tsed/common';
 import { Name, Returns, Summary } from '@tsed/schema';
 import { BadRequest } from '@tsed/exceptions';
 import EmailService from '../../services/email-service';
@@ -10,7 +10,6 @@ export default class SendEmailController {
   constructor(private readonly _emailService: EmailService) {}
 
   @Post('')
-  // @UseBefore(TypeGuardMiddleware)
   @(Returns(204).Description('Email sent'))
   @(Returns(400).Description('Invalid "from" email address'))
   @(Returns(400).Description('Invalid "to" email address'))
