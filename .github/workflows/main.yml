@@ -26,7 +26,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: test-packages
+    needs: build
 
     strategy:
       matrix:
