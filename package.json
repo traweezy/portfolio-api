@@ -7,7 +7,7 @@
     "tsc": "tsc --project tsconfig.compile.json",
     "tsc:w": "tsc --project tsconfig.json -w",
     "start:dev": "tsnd --inspect --ignore-watch node_modules --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
-    "postinstall": "npm run build && cp -r src/public dist/src/ && rm -v -rf src",
+    "postinstall": "npm run build && cp -r src/public dist/src/",
     "start": "node ./dist/src/index.js",
     "test": "npm run test:lint && npm run test:coverage",
     "test:unit": "cross-env NODE_ENV=test jest",
