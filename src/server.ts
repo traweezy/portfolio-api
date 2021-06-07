@@ -7,7 +7,7 @@ import path from 'path';
 import compress from 'compression';
 import cookieParser from 'cookie-parser';
 import methodOverride from 'method-override';
-import express from 'express';
+import favicon from 'express-favicon';
 import cors from 'cors';
 import '@tsed/ajv';
 import '@tsed/swagger';
@@ -44,13 +44,13 @@ export default class Server {
 
   $beforeRoutesInit(): void {
     this.app
+      // eslint-disable-next-line unicorn/prefer-module
+      .use(favicon(path.join(__dirname, '/public/favicon.ico')))
       .use(cors())
       .use(cookieParser())
       .use(compress({}))
       .use(methodOverride())
       .use(bodyParser.json())
-      // eslint-disable-next-line unicorn/prefer-module
-      .use('/public', express.static(path.join(__dirname, 'public')))
       .use(
         bodyParser.urlencoded({
           extended: true,
