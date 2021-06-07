@@ -14,7 +14,8 @@
     "test:coverage": "npm run test:unit",
     "test:lint": "eslint src --ext .ts",
     "test:lint:fix": "eslint src --ext .ts --fix",
-    "prettier": "prettier '{src,test}/**/*.ts' --write"
+    "prettier": "prettier '{src,test}/**/*.ts' --write",
+    "security-audit": "npm audit --only=prod"
   },
   "dependencies": {
     "@tsed/ajv": "^6.53.0",
