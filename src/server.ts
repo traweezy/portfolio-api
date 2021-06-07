@@ -2,9 +2,12 @@ import { Configuration, Inject } from '@tsed/di';
 import { PlatformApplication } from '@tsed/common';
 import '@tsed/platform-express';
 import bodyParser from 'body-parser';
+// eslint-disable-next-line unicorn/prefer-node-protocol
+import path from 'path';
 import compress from 'compression';
 import cookieParser from 'cookie-parser';
 import methodOverride from 'method-override';
+import express from 'express';
 import cors from 'cors';
 import '@tsed/ajv';
 import '@tsed/swagger';
@@ -46,6 +49,8 @@ export default class Server {
       .use(compress({}))
       .use(methodOverride())
       .use(bodyParser.json())
+      // eslint-disable-next-line unicorn/prefer-module
+      .use('/public', express.static(path.join(__dirname, 'public')))
       .use(
         bodyParser.urlencoded({
           extended: true,

@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "npm run tsc",
+    "build": "npm run tsc && cp -r src/public dist/src/ ",
     "tsc": "tsc --project tsconfig.compile.json",
     "tsc:w": "tsc --project tsconfig.json -w",
     "start:dev": "tsnd --inspect --ignore-watch node_modules --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
-    "postinstall": "npm run build",
+    "postinstall": "npm run build && rm -v -rf src",
     "start": "node ./dist/src/index.js",
     "test": "npm run test:lint && npm run test:coverage",
     "test:unit": "cross-env NODE_ENV=test jest",
