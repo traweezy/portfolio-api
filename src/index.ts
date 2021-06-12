@@ -2,7 +2,7 @@ import { $log } from '@tsed/common';
 import { PlatformExpress } from '@tsed/platform-express';
 import Server from './server';
 
-async function bootstrap() {
+const bootstrap = async () => {
   try {
     $log.debug('Start server...');
     const platform = await PlatformExpress.bootstrap(Server);
@@ -12,6 +12,8 @@ async function bootstrap() {
   } catch (error) {
     $log.error(error);
   }
-}
+};
 
 bootstrap();
+
+process.on('SIGTERM', () => process.exit());
