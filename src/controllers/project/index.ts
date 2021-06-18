@@ -52,6 +52,12 @@ export default class ProjectController {
   async create(
     @BodyParams() @Groups('creation') project: Project,
   ): Promise<Project> {
+    if (!project?.name) {
+      throw new BadRequest('Name must be provided');
+    }
+    if (!project?.description) {
+      throw new BadRequest('Description must be provided');
+    }
     return this.service.create({ data: project });
   }
 
@@ -68,6 +74,9 @@ export default class ProjectController {
   ): Promise<Project | void> {
     if (Number.isNaN(+id)) {
       throw new BadRequest('Given ID is not a number');
+    }
+    if (!name && !description && !image) {
+      throw new BadRequest('Name, description, or image must be provided');
     }
     try {
       return (await this.service.update({
