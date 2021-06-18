@@ -1,7 +1,6 @@
 import { PlatformTest } from '@tsed/common';
 import SuperTest from 'supertest';
 import { project as Project } from '@prisma/client';
-import { ProjectModel } from '../../models/project';
 import ProjectController from './index';
 import Server from '../../server';
 
