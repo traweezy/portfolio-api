@@ -3,14 +3,20 @@ import SuperTest from 'supertest';
 import { project as Project } from '@prisma/client';
 import ProjectCtrl from './index';
 import Server from '../../server';
+import getTestingToken from '../../utils/get-testing-token';
 
 describe('Given ProjectCtrl', () => {
+  let token: string;
   let request: SuperTest.SuperTest<SuperTest.Test>;
   const validProject: Omit<Project, 'id'> = {
     name: 'test project',
     description: 'test project desacription',
     image: 'test project image',
   };
+
+  beforeAll(async () => {
+    token = await getTestingToken();
+  });
 
   beforeEach(
     PlatformTest.bootstrap(Server, {
@@ -27,7 +33,10 @@ describe('Given ProjectCtrl', () => {
 
   describe('When GET /rest/project is called', () => {
     it('Should then return a 200 with an array of projects', async () => {
-      const response = await request.get('/rest/project').expect(200);
+      const response = await request
+        .get('/rest/project')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
       expect(Array.isArray(response.body)).toEqual(true);
       expect(response.body.length >= 0).toEqual(true);
     });
@@ -37,18 +46,26 @@ describe('Given ProjectCtrl', () => {
     let id: number;
 
     beforeEach(async () => {
-      const response = await request.post('/rest/project').send(validProject);
+      const response = await request
+        .post('/rest/project')
+        .set('Authorization', `Bearer ${token}`)
+        .send(validProject);
       id = response?.body?.id;
     });
 
     afterEach(async () => {
       if (id) {
-        await request.delete(`/rest/project/${id}`);
+        await request
+          .delete(`/rest/project/${id}`)
+          .set('Authorization', `Bearer ${token}`);
       }
     });
 
     it('Should then return a 200 with an the project with matching ID', async () => {
-      const response = await request.get(`/rest/project/${id}`).expect(200);
+      const response = await request
+        .get(`/rest/project/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
       expect(response.body).toStrictEqual({
         ...validProject,
         id,
@@ -60,7 +77,10 @@ describe('Given ProjectCtrl', () => {
     const invalidId = 'marklar';
 
     it('Should then return a 400', async () => {
-      await request.get(`/rest/project/${invalidId}`).expect(400);
+      await request
+        .get(`/rest/project/${invalidId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400);
     });
   });
 
@@ -68,7 +88,10 @@ describe('Given ProjectCtrl', () => {
     const invalidId = -1;
 
     it('Should then return a 404', async () => {
-      await request.get(`/rest/project/${invalidId}`).expect(404);
+      await request
+        .get(`/rest/project/${invalidId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(404);
     });
   });
 
@@ -77,13 +100,16 @@ describe('Given ProjectCtrl', () => {
 
     afterEach(async () => {
       if (id) {
-        await request.delete(`/rest/project/${id}`);
+        await request
+          .delete(`/rest/project/${id}`)
+          .set('Authorization', `Bearer ${token}`);
       }
     });
 
     it('Should then return a 201 with the created project', async () => {
       const response = await request
         .post('/rest/project')
+        .set('Authorization', `Bearer ${token}`)
         .send(validProject)
         .expect(201);
 
@@ -100,7 +126,9 @@ describe('Given ProjectCtrl', () => {
 
     afterEach(async () => {
       if (id) {
-        await request.delete(`/rest/project/${id}`);
+        await request
+          .delete(`/rest/project/${id}`)
+          .set('Authorization', `Bearer ${token}`);
       }
     });
 
@@ -109,7 +137,11 @@ describe('Given ProjectCtrl', () => {
         ...validProject,
         name: undefined,
       };
-      await request.post('/rest/project').send(invalidProject).expect(400);
+      await request
+        .post('/rest/project')
+        .send(invalidProject)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400);
     });
   });
 
@@ -118,7 +150,9 @@ describe('Given ProjectCtrl', () => {
 
     afterEach(async () => {
       if (id) {
-        await request.delete(`/rest/project/${id}`);
+        await request
+          .delete(`/rest/project/${id}`)
+          .set('Authorization', `Bearer ${token}`);
       }
     });
 
@@ -127,7 +161,11 @@ describe('Given ProjectCtrl', () => {
         ...validProject,
         description: undefined,
       };
-      await request.post('/rest/project').send(invalidProject).expect(400);
+      await request
+        .post('/rest/project')
+        .send(invalidProject)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400);
     });
   });
 
@@ -140,7 +178,11 @@ describe('Given ProjectCtrl', () => {
     };
 
     it('Should then return a 400', async () => {
-      await request.put(`/rest/project/${id}`).send(validFields).expect(400);
+      await request
+        .put(`/rest/project/${id}`)
+        .send(validFields)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400);
     });
   });
 
@@ -153,7 +195,11 @@ describe('Given ProjectCtrl', () => {
     };
 
     it('Should then return a 404', async () => {
-      await request.put(`/rest/project/${id}`).send(validFields).expect(404);
+      await request
+        .put(`/rest/project/${id}`)
+        .send(validFields)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(404);
     });
   });
 
@@ -166,13 +212,18 @@ describe('Given ProjectCtrl', () => {
     };
 
     beforeEach(async () => {
-      const response = await request.post('/rest/project').send(validProject);
+      const response = await request
+        .post('/rest/project')
+        .set('Authorization', `Bearer ${token}`)
+        .send(validProject);
       id = response?.body?.id;
     });
 
     afterEach(async () => {
       if (id) {
-        await request.delete(`/rest/project/${id}`);
+        await request
+          .delete(`/rest/project/${id}`)
+          .set('Authorization', `Bearer ${token}`);
       }
     });
 
@@ -180,6 +231,7 @@ describe('Given ProjectCtrl', () => {
       const response = await request
         .put(`/rest/project/${id}`)
         .send(validFields)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
       id = response?.body?.id;
@@ -195,50 +247,73 @@ describe('Given ProjectCtrl', () => {
     const validFields: Partial<Project> = {};
 
     beforeEach(async () => {
-      const response = await request.post('/rest/project').send(validProject);
+      const response = await request
+        .post('/rest/project')
+        .set('Authorization', `Bearer ${token}`)
+        .send(validProject);
       id = response?.body?.id;
     });
 
     afterEach(async () => {
       if (id) {
-        await request.delete(`/rest/project/${id}`);
+        await request
+          .delete(`/rest/project/${id}`)
+          .set('Authorization', `Bearer ${token}`);
       }
     });
 
     it('Should then return a 400', async () => {
-      await request.put(`/rest/project/${id}`).send(validFields).expect(400);
+      await request
+        .put(`/rest/project/${id}`)
+        .send(validFields)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400);
     });
   });
 
   describe('When DELTE /rest/project is called with an invalid project id', () => {
     const id = 'marklar';
     it('Should then return a 400', async () => {
-      await request.delete(`/rest/project/${id}`).expect(400);
+      await request
+        .delete(`/rest/project/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400);
     });
   });
 
   describe('When DELTE /rest/project is called with a project id not matching any project', () => {
     const id = -1;
     it('Should then return a 404', async () => {
-      await request.delete(`/rest/project/${id}`).expect(404);
+      await request
+        .delete(`/rest/project/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(404);
     });
   });
 
   describe('When DELETE /rest/project is called with a valid project id', () => {
     let id: number;
     beforeEach(async () => {
-      const response = await request.post('/rest/project').send(validProject);
+      const response = await request
+        .post('/rest/project')
+        .set('Authorization', `Bearer ${token}`)
+        .send(validProject);
       id = response?.body?.id;
     });
 
     afterEach(async () => {
       if (id) {
-        await request.delete(`/rest/project/${id}`);
+        await request
+          .delete(`/rest/project/${id}`)
+          .set('Authorization', `Bearer ${token}`);
       }
     });
 
     it('Should then return a 200 with the deleted project', async () => {
-      const response = await request.delete(`/rest/project/${id}`).expect(200);
+      const response = await request
+        .delete(`/rest/project/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
 
       id = response?.body?.id;
       expect(response.body).toStrictEqual({

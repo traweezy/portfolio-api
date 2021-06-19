@@ -2,13 +2,19 @@ import { PlatformTest } from '@tsed/common';
 import SuperTest from 'supertest';
 import SendEmailCtrl from './index';
 import Server from '../../server';
+import getTestingToken from '../../utils/get-testing-token';
 
 describe('Given SendEmailCtrl', () => {
+  let token: string;
   let request: SuperTest.SuperTest<SuperTest.Test>;
   const validFrom = 'tylerschumacher635@gmail.com';
   const validTo = 'tyler.schumacher@protonmail.com';
   const validSubject = 'Test subject';
   const validText = 'Test text';
+
+  beforeAll(async () => {
+    token = await getTestingToken();
+  });
 
   beforeEach(
     PlatformTest.bootstrap(Server, {
@@ -28,6 +34,7 @@ describe('Given SendEmailCtrl', () => {
     it('Should then return a 400', async () => {
       const response = await request
         .post('/send-email')
+        .set('Authorization', `Bearer ${token}`)
         .send({
           from: invalidFrom,
           to: validTo,
@@ -44,6 +51,7 @@ describe('Given SendEmailCtrl', () => {
     it('Should then return a 400', async () => {
       const response = await request
         .post('/send-email')
+        .set('Authorization', `Bearer ${token}`)
         .send({
           from: validFrom,
           to: invalidTo,
@@ -59,6 +67,7 @@ describe('Given SendEmailCtrl', () => {
     it('Should then return a 204', async () => {
       await request
         .post('/send-email')
+        .set('Authorization', `Bearer ${token}`)
         .send({
           from: validFrom,
           to: validTo,
