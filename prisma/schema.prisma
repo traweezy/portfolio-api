@@ -12,6 +12,22 @@ model project {
   name        String
   description String
   image       String?
+  links       link[]
+}
+
+enum linkType {
+  GITHUB
+  SWAGGER
+  PLAYGROUND
+  LIVE
+}
+
+model link {
+  id        Int      @id @default(autoincrement())
+  type      linkType
+  url       String
+  projectId Int
+  project   project  @relation(fields: [projectId], references: [id])
 }
 
 model user {

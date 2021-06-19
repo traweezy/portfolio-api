@@ -1,4 +1,4 @@
-import { project as Project } from '@prisma/client';
+import { project as Project, link as Link } from '@prisma/client';
 import { Name, Property, Required } from '@tsed/schema';
 
 export type Image = string | null;
@@ -25,4 +25,7 @@ export class ProjectModel implements Project {
 
   @Property()
   image: string | null;
+
+  @Property()
+  links: Link[] | undefined;
 }

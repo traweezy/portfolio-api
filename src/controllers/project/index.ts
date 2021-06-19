@@ -37,7 +37,7 @@ export default class ProjectCtrl {
     .Description('Return a list of Project'))
   async getAll(): Promise<Array<Project>> {
     await getTestingToken();
-    return this.service.findMany();
+    return this.service.findMany({ include: { links: true } });
   }
 
   @Get('/:id')
@@ -50,6 +50,7 @@ export default class ProjectCtrl {
     }
     const uniqueProject = (await this.service.findUnique({
       where: { id },
+      include: { links: true },
     })) as Project;
     if (!uniqueProject) {
       throw new NotFound('Project with given ID does not exist');
@@ -94,6 +95,7 @@ export default class ProjectCtrl {
     try {
       return (await this.service.update({
         where: { id },
+        include: { links: true },
         data: { name, description, image },
       })) as Project;
     } catch (error) {
@@ -118,6 +120,7 @@ export default class ProjectCtrl {
     try {
       return (await this.service.delete({
         where: { id },
+        include: { links: true },
       })) as Project;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
