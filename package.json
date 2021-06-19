@@ -8,7 +8,7 @@
     "tsc:w": "tsc --project tsconfig.json -w",
     "start:dev": "tsnd --inspect --ignore-watch node_modules --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
     "postinstall": "npm run build",
-    "start": "pm2 link g4k4qnncoul2syk i967nrtb0rdci9h && pm2 start ./dist/src/index.js -n portfolio-api -i max",
+    "start": "pm2 link g4k4qnncoul2syk i967nrtb0rdci9h && pm2-runtime start ecosystem.config.js --env production",
     "test": "npm run test:lint && npm run test:coverage",
     "test:unit": "cross-env NODE_ENV=test jest",
     "test:coverage": "npm run test:unit",
