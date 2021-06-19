@@ -6,23 +6,30 @@ import {
   Get,
   Post,
   Put,
+  ProviderScope,
+  Scope,
 } from '@tsed/common';
 import { Inject } from '@tsed/di';
 import { Prisma, project as Project } from '@prisma/client';
 import { Groups, Returns, Summary, Name } from '@tsed/schema';
+import { Authenticate } from '@tsed/passport';
 import { NotFound, BadRequest } from '@tsed/exceptions';
 import { ProjectModel } from '../../models/project';
 import ProjectRepository from '../../services/project-service';
 import { PatchedPrismaClientKnownRequestError } from '../../types/library-patches';
+import bearerAuth from '../../decorators/bearer-auth-decorator';
 
 @Controller('/project')
+@Scope(ProviderScope.SINGLETON)
 @Name('Project')
-export default class ProjectController {
+@Authenticate('jwt')
+export default class ProjectCtrl {
   @Inject()
-  protected service: ProjectRepository;
+  protected service!: ProjectRepository;
 
   @Get()
   @Summary('Get all projects')
+  @bearerAuth()
   @(Returns(200, Array)
     .Of(ProjectModel)
     .Description('Return a list of Project'))
@@ -32,6 +39,7 @@ export default class ProjectController {
 
   @Get('/:id')
   @Summary('Get a project')
+  @bearerAuth()
   @(Returns(200, ProjectModel).Description('Return the project with given ID'))
   async get(@PathParams('id') id: number): Promise<Project | void> {
     if (Number.isNaN(+id)) {
@@ -48,6 +56,7 @@ export default class ProjectController {
 
   @Post()
   @Summary('Create a new project')
+  @bearerAuth()
   @Returns(201, ProjectModel)
   async create(
     @BodyParams() @Groups('creation') project: Project,
@@ -63,6 +72,7 @@ export default class ProjectController {
 
   @Put('/:id')
   @Summary('Update project')
+  @bearerAuth()
   @(Returns(200, ProjectModel).Description('Returns updated project'))
   @(Returns(400).Description('Given ID is not a number'))
   @(Returns(404).Description('Project with given ID does not exist'))

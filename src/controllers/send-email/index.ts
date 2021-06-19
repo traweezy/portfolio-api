@@ -1,15 +1,24 @@
 /* eslint-disable class-methods-use-this */
-import { Controller, Post, BodyParams } from '@tsed/common';
+import {
+  Controller,
+  Post,
+  BodyParams,
+  ProviderScope,
+  Scope,
+} from '@tsed/common';
 import { Name, Returns, Summary } from '@tsed/schema';
 import { BadRequest } from '@tsed/exceptions';
 import EmailService from '../../services/email-service';
+import bearerAuth from '../../decorators/bearer-auth-decorator';
 
 @Controller('/send-email')
+@Scope(ProviderScope.SINGLETON)
 @Name('Send Email')
-export default class SendEmailController {
+export default class SendEmailCtrl {
   constructor(private readonly _emailService: EmailService) {}
 
-  @Post('')
+  @Post()
+  @bearerAuth()
   @(Returns(204).Description('Email sent'))
   @(Returns(400).Description('Invalid "from" email address'))
   @(Returns(400).Description('Invalid "to" email address'))

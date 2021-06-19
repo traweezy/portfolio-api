@@ -19,6 +19,7 @@
     "node": true
   },
   "rules": {
+    "class-methods-use-this": ["off"],
     "no-debugger": "off",
     "unicorn/prevent-abbreviations": "off",
     "no-underscore-dangle": "off",

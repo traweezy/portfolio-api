@@ -1,10 +1,10 @@
 import { PlatformTest } from '@tsed/common';
 import SuperTest from 'supertest';
 import { project as Project } from '@prisma/client';
-import ProjectController from './index';
+import ProjectCtrl from './index';
 import Server from '../../server';
 
-describe('Given ProjectController', () => {
+describe('Given ProjectCtrl', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
   const validProject: Omit<Project, 'id'> = {
     name: 'test project',
@@ -15,7 +15,7 @@ describe('Given ProjectController', () => {
   beforeEach(
     PlatformTest.bootstrap(Server, {
       mount: {
-        '/': [ProjectController],
+        '/': [ProjectCtrl],
       },
     }),
   );

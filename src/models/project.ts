@@ -1,10 +1,17 @@
-import { project } from '@prisma/client';
+import { project as Project } from '@prisma/client';
 import { Name, Property, Required } from '@tsed/schema';
 
 export type Image = string | null;
 
 @Name('Project')
-export class ProjectModel implements project {
+export class ProjectModel implements Project {
+  constructor(project: Project) {
+    this.id = project.id;
+    this.name = project.name;
+    this.description = project.description;
+    this.image = project.image;
+  }
+
   @Property()
   id: number;
 
@@ -17,5 +24,5 @@ export class ProjectModel implements project {
   description: string;
 
   @Property()
-  image: string;
+  image: string | null;
 }

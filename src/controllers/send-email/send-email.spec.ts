@@ -1,13 +1,13 @@
 import { PlatformTest } from '@tsed/common';
-import SendEmailController from './index';
+import SendEmailCtrl from './index';
 
-describe('Given SendEmailController', () => {
+describe('Given SendEmailCtrl', () => {
   beforeEach(PlatformTest.create);
   afterEach(PlatformTest.reset);
 
   it('It should exist', () => {
-    const instance = PlatformTest.get<SendEmailController>(SendEmailController);
+    const instance = PlatformTest.get<SendEmailCtrl>(SendEmailCtrl);
 
-    expect(instance).toBeInstanceOf(SendEmailController);
+    expect(instance).toBeInstanceOf(SendEmailCtrl);
   });
 });

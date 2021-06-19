@@ -1,9 +1,9 @@
 import { PlatformTest } from '@tsed/common';
 import SuperTest from 'supertest';
-import SendEmailController from './index';
+import SendEmailCtrl from './index';
 import Server from '../../server';
 
-describe('Given SendEmailController', () => {
+describe('Given SendEmailCtrl', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
   const validFrom = 'tylerschumacher635@gmail.com';
   const validTo = 'tyler.schumacher@protonmail.com';
@@ -13,7 +13,7 @@ describe('Given SendEmailController', () => {
   beforeEach(
     PlatformTest.bootstrap(Server, {
       mount: {
-        '/': [SendEmailController],
+        '/': [SendEmailCtrl],
       },
     }),
   );
@@ -23,7 +23,7 @@ describe('Given SendEmailController', () => {
 
   afterEach(PlatformTest.reset);
 
-  describe('When SendEmailController.post() is called with an invalid "from" email', () => {
+  describe('When SendEmailCtrl.post() is called with an invalid "from" email', () => {
     const invalidFrom = 'tylerschumacher';
     it('Should then return a 400', async () => {
       const response = await request
@@ -39,7 +39,7 @@ describe('Given SendEmailController', () => {
     });
   });
 
-  describe('When SendEmailController.post() is called with an invalid "to" email', () => {
+  describe('When SendEmailCtrl.post() is called with an invalid "to" email', () => {
     const invalidTo = 'tylerschumacher';
     it('Should then return a 400', async () => {
       const response = await request
@@ -55,7 +55,7 @@ describe('Given SendEmailController', () => {
     });
   });
 
-  describe('When SendEmailController.post() is called with valid fields', () => {
+  describe('When SendEmailCtrl.post() is called with valid fields', () => {
     it('Should then return a 204', async () => {
       await request
         .post('/send-email')

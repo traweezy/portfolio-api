@@ -1,5 +1,6 @@
 import { Configuration, Inject } from '@tsed/di';
 import { PlatformApplication } from '@tsed/common';
+import '@tsed/passport';
 import '@tsed/platform-express';
 import bodyParser from 'body-parser';
 // eslint-disable-next-line unicorn/prefer-node-protocol
@@ -11,8 +12,31 @@ import favicon from 'express-favicon';
 import cors from 'cors';
 import '@tsed/ajv';
 import '@tsed/swagger';
+import { OpenSpec3 } from '@tsed/openspec';
 import { config, rootDir } from './config';
 import IndexCtrl from './controllers/pages/index-controller';
+import LoginProtocol from './protocols/login-protocol';
+
+const specOS3: Partial<OpenSpec3> = {
+  info: {
+    title: 'Portfolio API',
+    version: '1.0.0',
+  },
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+    },
+  },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+};
 
 @Configuration({
   ...config,
@@ -23,10 +47,27 @@ import IndexCtrl from './controllers/pages/index-controller';
     '/rest': [`${rootDir}/controllers/**/*.ts`],
     '/': [IndexCtrl],
   },
+  componentsScan: [
+    `${rootDir}/protocols/*.ts`, // scan protocols directory
+  ],
+  passport: {},
+  logger: {
+    requestFields: [
+      'reqId',
+      'method',
+      'url',
+      'headers',
+      'body',
+      'query',
+      'params',
+      'duration',
+    ],
+  },
   swagger: [
     {
       path: '/v3/docs',
       specVersion: '3.0.1',
+      spec: specOS3,
     },
   ],
   views: {
@@ -34,16 +75,17 @@ import IndexCtrl from './controllers/pages/index-controller';
     viewEngine: 'ejs',
   },
   exclude: ['**/*.spec.ts'],
+  imports: [LoginProtocol],
 })
 export default class Server {
   @Inject()
-  app: PlatformApplication;
+  private _app!: PlatformApplication;
 
   @Configuration()
-  settings: Configuration;
+  settings!: Configuration;
 
   $beforeRoutesInit(): void {
-    this.app
+    this._app
       // eslint-disable-next-line unicorn/prefer-module
       .use(favicon(path.join(__dirname, '/public/favicon.ico')))
       .use(cors())

@@ -1,4 +1,12 @@
-import { Constant, Controller, Get, HeaderParams, View } from '@tsed/common';
+import {
+  Constant,
+  Controller,
+  Get,
+  HeaderParams,
+  View,
+  ProviderScope,
+  Scope,
+} from '@tsed/common';
 import { Hidden, SwaggerSettings } from '@tsed/swagger';
 import { Returns } from '@tsed/schema';
 
@@ -9,10 +17,11 @@ export interface IndexCtrlResponse {
 }
 
 @Hidden()
+@Scope(ProviderScope.SINGLETON)
 @Controller('/')
 export default class IndexCtrl {
   @Constant('swagger')
-  swagger: SwaggerSettings[];
+  swagger!: SwaggerSettings[];
 
   @Get('/')
   @View('index.ejs')
