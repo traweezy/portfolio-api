@@ -11,7 +11,7 @@ describe('Given LinkCtrl', () => {
   const validLink: Omit<Link, 'id'> = {
     type: 'GITHUB',
     url: 'test link url',
-    projectId: 1,
+    projectId: 26,
   };
 
   beforeAll(async () => {
