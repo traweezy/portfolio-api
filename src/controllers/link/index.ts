@@ -60,7 +60,7 @@ export default class LinkCtrl {
   @bearerAuth()
   @Returns(201, LinkModel)
   async create(@BodyParams() @Groups('creation') link: Link): Promise<Link> {
-    if (!link?.type) {
+    if (!(link?.type in LinkType)) {
       throw new BadRequest(
         'A valid link type must be provided: [GITHUB, SWAGGER, PLAYGROUND, LIVE]',
       );
@@ -82,20 +82,27 @@ export default class LinkCtrl {
   @(Returns(404).Description('link with given ID does not exist'))
   async update(
     @PathParams('id') id: number,
-    @BodyParams('name') type?: LinkType,
-    @BodyParams('description') url?: string,
-    @BodyParams('image') projectId?: number,
+    @BodyParams('type') type?: string,
+    @BodyParams('url') url?: string,
+    @BodyParams('projectId') projectId?: number,
   ): Promise<Link | void> {
     if (Number.isNaN(+id)) {
       throw new BadRequest('Given ID is not a number');
     }
     if (!type && !url && !projectId) {
-      throw new BadRequest('Name, description, or image must be provided');
+      throw new BadRequest(
+        'Type, description, and/or projectId must be provided',
+      );
+    }
+    if (type && !(type in LinkType)) {
+      throw new BadRequest(
+        'A valid link type must be provided: [GITHUB, SWAGGER, PLAYGROUND, LIVE]',
+      );
     }
     try {
       return (await this.service.update({
         where: { id },
-        data: { type, url, projectId },
+        data: { type: type as LinkType, url, projectId },
       })) as Link;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {

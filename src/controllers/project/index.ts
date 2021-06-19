@@ -90,7 +90,7 @@ export default class ProjectCtrl {
       throw new BadRequest('Given ID is not a number');
     }
     if (!name && !description && !image) {
-      throw new BadRequest('Name, description, or image must be provided');
+      throw new BadRequest('Name, description, and/or image must be provided');
     }
     try {
       return (await this.service.update({
