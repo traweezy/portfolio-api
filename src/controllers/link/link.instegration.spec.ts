@@ -7,11 +7,17 @@ import getTestingToken from '../../utils/get-testing-token';
 
 describe('Given LinkCtrl', () => {
   let token: string;
+  let testProjectId: number;
   let request: SuperTest.SuperTest<SuperTest.Test>;
   const validLink: Omit<Link, 'id'> = {
     type: 'GITHUB',
     url: 'test link url',
-    projectId: 26,
+    projectId: -1,
+  };
+  const validProject: Omit<Project, 'id'> = {
+    name: 'test project',
+    description: 'test project description',
+    image: 'test project image',
   };
 
   beforeAll(async () => {
@@ -25,7 +31,7 @@ describe('Given LinkCtrl', () => {
       },
     }),
   );
-  beforeEach(() => {
+  beforeEach(async () => {
     request = SuperTest(PlatformTest.callback());
   });
 
@@ -46,6 +52,12 @@ describe('Given LinkCtrl', () => {
     let id: number;
 
     beforeEach(async () => {
+      const projectResponse = await request
+        .post('/rest/project')
+        .set('Authorization', `Bearer ${token}`)
+        .send(validProject);
+      testProjectId = projectResponse?.body?.id;
+      validLink.projectId = testProjectId;
       const response = await request
         .post('/rest/link')
         .set('Authorization', `Bearer ${token}`)
@@ -59,9 +71,14 @@ describe('Given LinkCtrl', () => {
           .delete(`/rest/link/${id}`)
           .set('Authorization', `Bearer ${token}`);
       }
+      if (testProjectId) {
+        await request
+          .delete(`/rest/project/${testProjectId}`)
+          .set('Authorization', `Bearer ${token}`);
+      }
     });
 
-    it('Should then return a 200 with an the link with matching ID', async () => {
+    it('Should then return a 200 with a link with matching ID', async () => {
       const response = await request
         .get(`/rest/link/${id}`)
         .set('Authorization', `Bearer ${token}`)
@@ -98,14 +115,27 @@ describe('Given LinkCtrl', () => {
   describe('When POST /rest/link is called with a valid link', () => {
     let id: number;
 
+    beforeEach(async () => {
+      const projectResponse = await request
+        .post('/rest/project')
+        .set('Authorization', `Bearer ${token}`)
+        .send(validProject);
+      testProjectId = projectResponse?.body?.id;
+      validLink.projectId = testProjectId;
+    });
+
     afterEach(async () => {
       if (id) {
         await request
           .delete(`/rest/link/${id}`)
           .set('Authorization', `Bearer ${token}`);
       }
+      if (testProjectId) {
+        await request
+          .delete(`/rest/project/${testProjectId}`)
+          .set('Authorization', `Bearer ${token}`);
+      }
     });
-
     it('Should then return a 201 with the created link', async () => {
       const response = await request
         .post('/rest/link')
@@ -169,6 +199,54 @@ describe('Given LinkCtrl', () => {
     });
   });
 
+  describe('When POST /rest/link is called with a link with a missing projectId field', () => {
+    let id: number;
+
+    afterEach(async () => {
+      if (id) {
+        await request
+          .delete(`/rest/link/${id}`)
+          .set('Authorization', `Bearer ${token}`);
+      }
+    });
+
+    it('Should then return a 400', async () => {
+      const invalidLink: Partial<Link> = {
+        ...validLink,
+        projectId: undefined,
+      };
+      await request
+        .post('/rest/link')
+        .send(invalidLink)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400);
+    });
+  });
+
+  describe('When POST /rest/link is called with a link with a projectId field that does not match an existing project', () => {
+    let id: number;
+
+    afterEach(async () => {
+      if (id) {
+        await request
+          .delete(`/rest/link/${id}`)
+          .set('Authorization', `Bearer ${token}`);
+      }
+    });
+
+    it('Should then return a 400', async () => {
+      const invalidLink: Partial<Link> = {
+        ...validLink,
+        projectId: -1,
+      };
+      await request
+        .post('/rest/link')
+        .send(invalidLink)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400);
+    });
+  });
+
   describe('When PUT /rest/link/:id is called with an invalid link id and valid fields', () => {
     const id = 'marklar';
     const validFields: Omit<Link, 'id'> = {
@@ -186,14 +264,70 @@ describe('Given LinkCtrl', () => {
     });
   });
 
+  describe('When PUT /rest/link/:id is called with a valid link id and an updated projectId field with no matching project', () => {
+    let id: number;
+    const validFields: Partial<Link> = {};
+
+    beforeEach(async () => {
+      const projectResponse = await request
+        .post('/rest/project')
+        .set('Authorization', `Bearer ${token}`)
+        .send(validProject);
+      testProjectId = projectResponse?.body?.id;
+      validLink.projectId = -10;
+      const response = await request
+        .post('/rest/link')
+        .set('Authorization', `Bearer ${token}`)
+        .send(validLink);
+      id = response?.body?.id;
+    });
+
+    afterEach(async () => {
+      if (id) {
+        await request
+          .delete(`/rest/link/${id}`)
+          .set('Authorization', `Bearer ${token}`);
+      }
+      if (testProjectId) {
+        await request
+          .delete(`/rest/project/${testProjectId}`)
+          .set('Authorization', `Bearer ${token}`);
+      }
+    });
+
+    it('Should then return a 400', async () => {
+      await request
+        .put(`/rest/link/${id}`)
+        .send(validFields)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400);
+    });
+  });
+
   describe('When PUT /rest/link/:id is called with a link id not matching any link and valid fields', () => {
     const id = -1;
     const validFields: Omit<Link, 'id'> = {
       type: 'LIVE',
       url: 'changed test url',
-      projectId: 2,
+      projectId: 1,
     };
 
+    beforeEach(async () => {
+      const projectResponse = await request
+        .post('/rest/project')
+        .set('Authorization', `Bearer ${token}`)
+        .send(validProject);
+      testProjectId = projectResponse?.body?.id;
+      validFields.projectId = testProjectId;
+    });
+
+    afterEach(async () => {
+      if (testProjectId) {
+        await request
+          .delete(`/rest/project/${testProjectId}`)
+          .set('Authorization', `Bearer ${token}`);
+      }
+    });
     it('Should then return a 404', async () => {
       await request
         .put(`/rest/link/${id}`)
@@ -205,17 +339,10 @@ describe('Given LinkCtrl', () => {
 
   describe('When PUT /rest/link/:id is called with a valid link id and valid fields', () => {
     let id: number;
-    let projectId: number;
     const validFields: Omit<Link, 'id'> = {
       type: 'LIVE',
       url: 'changed test url',
       projectId: 1,
-    };
-
-    const validProject: Omit<Project, 'id'> = {
-      name: 'test project',
-      description: 'test project description',
-      image: 'test project image',
     };
 
     beforeEach(async () => {
@@ -223,11 +350,13 @@ describe('Given LinkCtrl', () => {
         .post('/rest/project')
         .set('Authorization', `Bearer ${token}`)
         .send(validProject);
+      testProjectId = projectResponse?.body?.id;
+      validFields.projectId = testProjectId;
+      validLink.projectId = testProjectId;
       const response = await request
         .post('/rest/link')
         .set('Authorization', `Bearer ${token}`)
         .send(validLink);
-      console.log('LINK', response.body);
       id = response?.body?.id;
     });
 
@@ -235,6 +364,11 @@ describe('Given LinkCtrl', () => {
       if (id) {
         await request
           .delete(`/rest/link/${id}`)
+          .set('Authorization', `Bearer ${token}`);
+      }
+      if (testProjectId) {
+        await request
+          .delete(`/rest/project/${testProjectId}`)
           .set('Authorization', `Bearer ${token}`);
       }
     });
@@ -259,6 +393,12 @@ describe('Given LinkCtrl', () => {
     const validFields: Partial<Link> = {};
 
     beforeEach(async () => {
+      const projectResponse = await request
+        .post('/rest/project')
+        .set('Authorization', `Bearer ${token}`)
+        .send(validProject);
+      testProjectId = projectResponse?.body?.id;
+      validLink.projectId = testProjectId;
       const response = await request
         .post('/rest/link')
         .set('Authorization', `Bearer ${token}`)
@@ -270,6 +410,11 @@ describe('Given LinkCtrl', () => {
       if (id) {
         await request
           .delete(`/rest/link/${id}`)
+          .set('Authorization', `Bearer ${token}`);
+      }
+      if (testProjectId) {
+        await request
+          .delete(`/rest/project/${testProjectId}`)
           .set('Authorization', `Bearer ${token}`);
       }
     });
@@ -306,6 +451,12 @@ describe('Given LinkCtrl', () => {
   describe('When DELETE /rest/link is called with a valid link id', () => {
     let id: number;
     beforeEach(async () => {
+      const projectResponse = await request
+        .post('/rest/project')
+        .set('Authorization', `Bearer ${token}`)
+        .send(validProject);
+      testProjectId = projectResponse?.body?.id;
+      validLink.projectId = testProjectId;
       const response = await request
         .post('/rest/link')
         .set('Authorization', `Bearer ${token}`)
@@ -317,6 +468,11 @@ describe('Given LinkCtrl', () => {
       if (id) {
         await request
           .delete(`/rest/link/${id}`)
+          .set('Authorization', `Bearer ${token}`);
+      }
+      if (testProjectId) {
+        await request
+          .delete(`/rest/project/${testProjectId}`)
           .set('Authorization', `Bearer ${token}`);
       }
     });

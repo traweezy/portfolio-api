@@ -16,10 +16,9 @@ import { Authenticate } from '@tsed/passport';
 import { NotFound, BadRequest } from '@tsed/exceptions';
 import { LinkModel } from '../../models/link';
 import LinkRepository from '../../services/link-service';
+import ProjectRepository from '../../services/project-service';
 import { PatchedPrismaClientKnownRequestError } from '../../types/library-patches';
 import bearerAuth from '../../decorators/bearer-auth-decorator';
-
-import getTestingToken from '../../utils/get-testing-token';
 
 @Controller('/link')
 @Scope(ProviderScope.SINGLETON)
@@ -29,12 +28,14 @@ export default class LinkCtrl {
   @Inject()
   protected service!: LinkRepository;
 
+  @Inject()
+  protected projectService!: ProjectRepository;
+
   @Get()
   @Summary('Get all links')
   @bearerAuth()
   @(Returns(200, Array).Of(LinkModel).Description('Returns a list of links'))
   async getAll(): Promise<Array<Link>> {
-    await getTestingToken();
     return this.service.findMany();
   }
 
@@ -71,6 +72,15 @@ export default class LinkCtrl {
     if (!link?.projectId) {
       throw new BadRequest('Project ID must be provided');
     }
+    const matchingProject = await this.projectService.findUnique({
+      where: { id: link.projectId },
+    });
+    if (!matchingProject) {
+      throw new BadRequest('Project ID does not match an existing project');
+    }
+    if (!link?.projectId) {
+      throw new BadRequest('Project ID must be provided');
+    }
     return this.service.create({ data: link });
   }
 
@@ -98,6 +108,14 @@ export default class LinkCtrl {
       throw new BadRequest(
         'A valid link type must be provided: [GITHUB, SWAGGER, PLAYGROUND, LIVE]',
       );
+    }
+    if (projectId) {
+      const matchingProject = await this.projectService.findUnique({
+        where: { id: projectId },
+      });
+      if (!matchingProject) {
+        throw new BadRequest('Project ID does not match an existing project');
+      }
     }
     try {
       return (await this.service.update({
