@@ -1,21 +1,25 @@
-# portfolio-api
+<h1 align="center">Portfolio API</h1>
 
-> An awesome project based on Ts.ED framework
+<p align="center">Small API to power my portfolio site</p>
 
-See [Ts.ED](https://tsed.io) project for more information.
+## Links
 
-## Build setup
+- [Repo](https://github.com/traweezy/portfolio-api 'Portfolio API Repo')
 
-> **Important!** Ts.ED requires Node >= 10, Express >= 4 and TypeScript >= 3.
+- [Swagger API](https://tyler-schumacher-portfolio-api.herokuapp.com 'API')
 
-```batch
-# install dependencies
-$ npm install
+## Built With
 
-# serve
-$ npm run start
+- Typescript
+- Node
+- Ts.ED
+- Prisma
+- PostgreSQL
 
-# build for production
-$ npm run build
-$ npm run start:prod
-```
+## Author
+
+**Tyler Schumacher**
+
+- [Profile](https://github.com/traweezy 'Tyler Schymacher')
+- [Email](mailto:tyler.schumacher@protonmail.com')
+<!-- - [Website](https://tylerschumacher.dev 'Welcome') -->
