@@ -24,14 +24,12 @@ import getTestingToken from '../../utils/get-testing-token';
 @Controller('/project')
 @Scope(ProviderScope.SINGLETON)
 @Name('Project')
-@Authenticate('jwt')
 export default class ProjectCtrl {
   @Inject()
   protected service!: ProjectRepository;
 
   @Get()
   @Summary('Get all projects')
-  @bearerAuth()
   @(Returns(200, Array)
     .Of(ProjectModel)
     .Description('Return a list of Project'))
@@ -42,7 +40,6 @@ export default class ProjectCtrl {
 
   @Get('/:id')
   @Summary('Get a project')
-  @bearerAuth()
   @(Returns(200, ProjectModel).Description('Return the project with given ID'))
   async get(@PathParams('id') id: number): Promise<Project | void> {
     if (Number.isNaN(+id)) {
@@ -59,6 +56,7 @@ export default class ProjectCtrl {
   }
 
   @Post()
+  @Authenticate('jwt')
   @Summary('Create a new project')
   @bearerAuth()
   @Returns(201, ProjectModel)
@@ -75,6 +73,7 @@ export default class ProjectCtrl {
   }
 
   @Put('/:id')
+  @Authenticate('jwt')
   @Summary('Update project')
   @bearerAuth()
   @(Returns(200, ProjectModel).Description('Returns updated project'))
@@ -109,6 +108,7 @@ export default class ProjectCtrl {
   }
 
   @Delete('/:id')
+  @Authenticate('jwt')
   @Summary('Delete project')
   @(Returns(200, ProjectModel).Description('Return the deleted project'))
   @(Returns(400).Description('Given ID is not a number'))

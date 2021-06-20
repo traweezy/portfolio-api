@@ -23,7 +23,6 @@ import bearerAuth from '../../decorators/bearer-auth-decorator';
 @Controller('/link')
 @Scope(ProviderScope.SINGLETON)
 @Name('Link')
-@Authenticate('jwt')
 export default class LinkCtrl {
   @Inject()
   protected service!: LinkRepository;
@@ -33,7 +32,6 @@ export default class LinkCtrl {
 
   @Get()
   @Summary('Get all links')
-  @bearerAuth()
   @(Returns(200, Array).Of(LinkModel).Description('Returns a list of links'))
   async getAll(): Promise<Array<Link>> {
     return this.service.findMany();
@@ -41,7 +39,6 @@ export default class LinkCtrl {
 
   @Get('/:id')
   @Summary('Get a link')
-  @bearerAuth()
   @(Returns(200, LinkModel).Description('Return the link with given ID'))
   async get(@PathParams('id') id: number): Promise<Link | void> {
     if (Number.isNaN(+id)) {
@@ -57,6 +54,7 @@ export default class LinkCtrl {
   }
 
   @Post()
+  @Authenticate('jwt')
   @Summary('Create a new link')
   @bearerAuth()
   @Returns(201, LinkModel)
@@ -85,6 +83,7 @@ export default class LinkCtrl {
   }
 
   @Put('/:id')
+  @Authenticate('jwt')
   @Summary('Update link')
   @bearerAuth()
   @(Returns(200, LinkModel).Description('Returns updated link'))
@@ -133,6 +132,7 @@ export default class LinkCtrl {
   }
 
   @Delete('/:id')
+  @Authenticate('jwt')
   @Summary('Delete link')
   @(Returns(200, LinkModel).Description('Return the deleted link'))
   @(Returns(400).Description('Given ID is not a number'))
