@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.3.0]
+        node-version: [16.7.0]
 
     steps:
       - uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.3.0]
+        node-version: [16.7.0]
 
     steps:
       - uses: actions/checkout@v2
@@ -44,7 +44,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.3.0]
+        node-version: [16.7.0]
 
     steps:
       - uses: actions/checkout@v2
@@ -53,8 +53,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-      - 
-        env:
+      - env:
           HTTP_PORT: ${{ secrets.HTTP_PORT }}
           HTTPS_PORT: ${{ secrets.HTTPS_PORT }}
           NODE_ENV: ${{ secrets.NODE_ENV }}
