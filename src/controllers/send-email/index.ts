@@ -9,7 +9,6 @@ import {
 import { Name, Returns, Summary } from '@tsed/schema';
 import { BadRequest } from '@tsed/exceptions';
 import EmailService from '../../services/email-service';
-import bearerAuth from '../../decorators/bearer-auth-decorator';
 
 @Controller('/send-email')
 @Scope(ProviderScope.SINGLETON)
@@ -18,7 +17,6 @@ export default class SendEmailCtrl {
   constructor(private readonly _emailService: EmailService) {}
 
   @Post()
-  @bearerAuth()
   @(Returns(204).Description('Email sent'))
   @(Returns(400).Description('Invalid "from" email address'))
   @(Returns(400).Description('Invalid "to" email address'))
