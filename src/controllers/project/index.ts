@@ -86,8 +86,10 @@ export default class ProjectCtrl {
     if (Number.isNaN(+id)) {
       throw new BadRequest('Given ID is not a number');
     }
-    if (!name && !description && !image) {
-      throw new BadRequest('Name, description, and/or image must be provided');
+    if (!name && !description && !image && !Array.isArray(technologies)) {
+      throw new BadRequest(
+        'Name, description, image, and/or technologies must be provided',
+      );
     }
     try {
       return (await this.service.update({
