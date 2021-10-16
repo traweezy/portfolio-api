@@ -10,6 +10,7 @@ export class ProjectModel implements Project {
     this.name = project.name;
     this.description = project.description;
     this.image = project.image;
+    this.technologies = project.technologies;
   }
 
   @Property()
@@ -24,7 +25,10 @@ export class ProjectModel implements Project {
   description: string;
 
   @Property()
-  image: string | null;
+  image: Image;
+
+  @Property()
+  technologies: string[];
 
   @Property()
   links: Link[] | undefined;
