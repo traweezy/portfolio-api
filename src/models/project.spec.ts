@@ -7,6 +7,7 @@ describe('Given ProjectModel', () => {
     name: 'test name',
     description: 'test description',
     image: 'test image',
+    technologies: ['test technology'],
   };
   describe('When a project model is created with a valid project object', () => {
     it('Should then return a new project model', async () => {
