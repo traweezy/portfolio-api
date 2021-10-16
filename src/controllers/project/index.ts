@@ -81,6 +81,7 @@ export default class ProjectCtrl {
     @BodyParams('name') name?: string,
     @BodyParams('description') description?: string,
     @BodyParams('image') image?: string,
+    @BodyParams('technologies') technologies?: string[],
   ): Promise<Project | void> {
     if (Number.isNaN(+id)) {
       throw new BadRequest('Given ID is not a number');
@@ -92,7 +93,7 @@ export default class ProjectCtrl {
       return (await this.service.update({
         where: { id },
         include: { links: true },
-        data: { name, description, image },
+        data: { name, description, image, technologies },
       })) as Project;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
