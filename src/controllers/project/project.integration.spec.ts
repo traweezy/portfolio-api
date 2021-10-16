@@ -12,7 +12,7 @@ describe('Given ProjectCtrl', () => {
     name: 'test project',
     description: 'test project description',
     image: 'test project image',
-    technologies: ['test technology'],
+    technologies: [],
   };
 
   beforeAll(async () => {
@@ -177,7 +177,7 @@ describe('Given ProjectCtrl', () => {
       name: 'changed test name',
       description: 'changed test description',
       image: 'changed test image',
-      technologies: ['changed test technology'],
+      technologies: [],
     };
 
     it('Should then return a 400', async () => {
@@ -195,7 +195,7 @@ describe('Given ProjectCtrl', () => {
       name: 'changed test name',
       description: 'changed test description',
       image: 'changed test image',
-      technologies: ['changed test technology'],
+      technologies: [],
     };
 
     it('Should then return a 404', async () => {
@@ -213,7 +213,7 @@ describe('Given ProjectCtrl', () => {
       name: 'changed test name',
       description: 'changed test description',
       image: 'changed test image',
-      technologies: ['changed test technology'],
+      technologies: [],
     };
 
     beforeEach(async () => {
