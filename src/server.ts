@@ -70,6 +70,14 @@ const specOS3: Partial<OpenSpec3> = {
       spec: specOS3,
     },
   ],
+  statics: {
+    '/': [
+      {
+        root: `${rootDir}/static`,
+        hook: '$beforeRoutesInit',
+      },
+    ],
+  },
   views: {
     root: `${rootDir}/../views`,
     viewEngine: 'ejs',
