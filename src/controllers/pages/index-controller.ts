@@ -21,7 +21,13 @@ export interface IndexCtrlResponse {
 @Controller('/')
 export default class IndexCtrl {
   @Constant('swagger')
-  swagger!: SwaggerSettings[];
+  swagger!: SwaggerSettings[] = [
+    {
+      path: '/v3/docs',
+      specVersion: '3.0.1',
+      spec: specOS3,
+    },
+  ];
 
   @Get('/')
   @View('index.ejs')
