@@ -18,6 +18,7 @@ describe('Given LinkCtrl', () => {
     name: 'test project',
     description: 'test project description',
     image: 'test project image',
+    technologies: ['test technology'],
   };
 
   beforeAll(async () => {
