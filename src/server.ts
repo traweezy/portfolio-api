@@ -37,7 +37,6 @@ const specOS3: Partial<OpenSpec3> = {
     },
   ],
 };
-
 @Configuration({
   ...config,
   acceptMimes: ['application/json'],
@@ -74,7 +73,6 @@ const specOS3: Partial<OpenSpec3> = {
     '/': [
       {
         root: `${rootDir}/static`,
-        hook: '$beforeRoutesInit',
       },
     ],
   },
