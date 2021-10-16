@@ -176,30 +176,6 @@ describe('Given LinkCtrl', () => {
     });
   });
 
-  describe('When POST /rest/link is called with a link with a missing url field', () => {
-    let id: number;
-
-    afterEach(async () => {
-      if (id) {
-        await request
-          .delete(`/rest/link/${id}`)
-          .set('Authorization', `Bearer ${token}`);
-      }
-    });
-
-    it('Should then return a 400', async () => {
-      const invalidLink: Partial<Link> = {
-        ...validLink,
-        url: undefined,
-      };
-      await request
-        .post('/rest/link')
-        .send(invalidLink)
-        .set('Authorization', `Bearer ${token}`)
-        .expect(400);
-    });
-  });
-
   describe('When POST /rest/link is called with a link with a missing projectId field', () => {
     let id: number;
 
