@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 // eslint-disable-next-line unicorn/prefer-node-protocol
 import path from 'path';
 import compress from 'compression';
+import express from 'express';
 import cookieParser from 'cookie-parser';
 import methodOverride from 'method-override';
 import favicon from 'express-favicon';
@@ -69,13 +70,6 @@ const specOS3: Partial<OpenSpec3> = {
       spec: specOS3,
     },
   ],
-  statics: {
-    '/': [
-      {
-        root: `${rootDir}/static`,
-      },
-    ],
-  },
   views: {
     root: `${rootDir}/../views`,
     viewEngine: 'ejs',
@@ -103,6 +97,7 @@ export default class Server {
         bodyParser.urlencoded({
           extended: true,
         }),
-      );
+      )
+      .use(express.static('public'));
   }
 }
