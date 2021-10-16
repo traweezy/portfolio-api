@@ -19,8 +19,6 @@ import ProjectRepository from '../../services/project-service';
 import { PatchedPrismaClientKnownRequestError } from '../../types/library-patches';
 import bearerAuth from '../../decorators/bearer-auth-decorator';
 
-import getTestingToken from '../../utils/get-testing-token';
-
 @Controller('/project')
 @Scope(ProviderScope.SINGLETON)
 @Name('Project')
@@ -34,7 +32,6 @@ export default class ProjectCtrl {
     .Of(ProjectModel)
     .Description('Return a list of Project'))
   async getAll(): Promise<Array<Project>> {
-    await getTestingToken();
     return this.service.findMany({ include: { links: true } });
   }
 
