@@ -20,9 +20,8 @@ export class LinkModel implements Link {
   @Property()
   type: LinkType;
 
-  @Required()
   @Property()
-  url: string;
+  url: string | null;
 
   @Property()
   @Required()
