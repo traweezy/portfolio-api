@@ -9,6 +9,28 @@ import {
 } from '@tsed/common';
 import { Hidden, SwaggerSettings } from '@tsed/swagger';
 import { Returns } from '@tsed/schema';
+import { OpenSpec3 } from '@tsed/openspec';
+
+const specOS3: Partial<OpenSpec3> = {
+  info: {
+    title: 'Portfolio API',
+    version: '1.0.0',
+  },
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+    },
+  },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+};
 
 export interface IndexCtrlResponse {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -21,7 +43,7 @@ export interface IndexCtrlResponse {
 @Controller('/')
 export default class IndexCtrl {
   @Constant('swagger')
-  swagger!: SwaggerSettings[] = [
+  swagger: SwaggerSettings[] = [
     {
       path: '/v3/docs',
       specVersion: '3.0.1',
