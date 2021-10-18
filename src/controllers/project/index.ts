@@ -92,8 +92,8 @@ export default class ProjectCtrl {
       !name &&
       !description &&
       !image &&
-      !isWorkInProgress &&
-      !sortIndex &&
+      typeof isWorkInProgress === 'boolean' &&
+      Number.isNaN(sortIndex) &&
       !Array.isArray(technologies)
     ) {
       throw new BadRequest(
