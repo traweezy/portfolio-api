@@ -18,6 +18,7 @@ import { ProjectModel } from '../../models/project';
 import ProjectRepository from '../../services/project-service';
 import { PatchedPrismaClientKnownRequestError } from '../../types/library-patches';
 import bearerAuth from '../../decorators/bearer-auth-decorator';
+import { and, or } from 'ajv/dist/compile/codegen';
 
 @Controller('/project')
 @Scope(ProviderScope.SINGLETON)
@@ -93,7 +94,8 @@ export default class ProjectCtrl {
       !description &&
       !image &&
       typeof isWorkInProgress !== 'boolean' &&
-      Number.isNaN(sortIndex) &&
+      !sortIndex &&
+      sortIndex !== 0 &&
       !Array.isArray(technologies)
     ) {
       throw new BadRequest(
@@ -104,7 +106,14 @@ export default class ProjectCtrl {
       return (await this.service.update({
         where: { id },
         include: { links: true },
-        data: { name, description, image, technologies },
+        data: {
+          name,
+          description,
+          image,
+          technologies,
+          sortIndex,
+          isWorkInProgress,
+        },
       })) as Project;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {

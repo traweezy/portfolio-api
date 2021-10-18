@@ -73,5 +73,6 @@ export default class LoginProtocol implements OnVerify, OnInstall {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   $onInstall(strategy: Strategy): void {}
 }
