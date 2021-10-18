@@ -8,6 +8,8 @@ describe('Given ProjectModel', () => {
     description: 'test description',
     image: 'test image',
     technologies: ['test technology'],
+    isWorkInProgress: false,
+    sortIndex: 0,
   };
   describe('When a project model is created with a valid project object', () => {
     it('Should then return a new project model', async () => {

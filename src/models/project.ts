@@ -11,6 +11,8 @@ export class ProjectModel implements Project {
     this.description = project.description;
     this.image = project.image;
     this.technologies = project.technologies;
+    this.isWorkInProgress = project.isWorkInProgress;
+    this.sortIndex = project.sortIndex;
   }
 
   @Property()
@@ -26,6 +28,12 @@ export class ProjectModel implements Project {
 
   @Property()
   image: Image;
+
+  @Property()
+  isWorkInProgress: boolean | null;
+
+  @Property()
+  sortIndex: number | null;
 
   @Property()
   technologies: string[];

@@ -19,6 +19,8 @@ describe('Given LinkCtrl', () => {
     description: 'test project description',
     image: 'test project image',
     technologies: ['test technology'],
+    isWorkInProgress: false,
+    sortIndex: 0,
   };
 
   beforeAll(async () => {
