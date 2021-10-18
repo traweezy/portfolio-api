@@ -18,7 +18,6 @@ import { ProjectModel } from '../../models/project';
 import ProjectRepository from '../../services/project-service';
 import { PatchedPrismaClientKnownRequestError } from '../../types/library-patches';
 import bearerAuth from '../../decorators/bearer-auth-decorator';
-import { and, or } from 'ajv/dist/compile/codegen';
 
 @Controller('/project')
 @Scope(ProviderScope.SINGLETON)
