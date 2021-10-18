@@ -82,13 +82,22 @@ export default class ProjectCtrl {
     @BodyParams('description') description?: string,
     @BodyParams('image') image?: string,
     @BodyParams('technologies') technologies?: string[],
+    @BodyParams('isWorkInProgress') isWorkInProgress?: boolean,
+    @BodyParams('sortIndex') sortIndex?: number,
   ): Promise<Project | void> {
     if (Number.isNaN(+id)) {
       throw new BadRequest('Given ID is not a number');
     }
-    if (!name && !description && !image && !Array.isArray(technologies)) {
+    if (
+      !name &&
+      !description &&
+      !image &&
+      !isWorkInProgress &&
+      !sortIndex &&
+      !Array.isArray(technologies)
+    ) {
       throw new BadRequest(
-        'Name, description, image, and/or technologies must be provided',
+        'Name, description, image,isWorkInProgress, sortIndex, and/or technologies must be provided',
       );
     }
     try {

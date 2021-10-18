@@ -8,12 +8,14 @@ generator client {
 }
 
 model project {
-  id           Int      @id @default(autoincrement())
-  name         String
-  description  String
-  image        String?
-  links        link[]
-  technologies String[]
+  id               Int      @id @default(autoincrement())
+  name             String
+  description      String
+  image            String?
+  isWorkInProgress Boolean?
+  sortIndex        Int?
+  links            link[]
+  technologies     String[]
 }
 
 enum linkType {
