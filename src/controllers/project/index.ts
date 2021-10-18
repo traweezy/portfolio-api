@@ -92,7 +92,7 @@ export default class ProjectCtrl {
       !name &&
       !description &&
       !image &&
-      typeof isWorkInProgress === 'boolean' &&
+      typeof isWorkInProgress !== 'boolean' &&
       Number.isNaN(sortIndex) &&
       !Array.isArray(technologies)
     ) {
